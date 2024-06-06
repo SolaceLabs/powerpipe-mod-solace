@@ -1064,7 +1064,7 @@ dashboard "event_dependency" {
         EOM
       }
       text {
-        width = 1
+        width = 2
         value = <<-EOM
           EventAPI Product ![#580aff](https://placehold.co/15x15/580aff/580aff.png) 
         EOM
