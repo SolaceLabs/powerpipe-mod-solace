@@ -35,7 +35,11 @@ dashboard "application_domain" {
       category = category.application_domain
 
       sql = <<-EOQ
-        select id as id, name as title, 0 as depth
+        select id as id, name as title, 0 as depth,
+          json_build_object(
+            'id', id,
+            'domain', name
+          ) AS properties
         from solace_application_domain
         where id = $1
       EOQ
@@ -46,7 +50,11 @@ dashboard "application_domain" {
       category = category.application
       
       sql = <<-EOQ
-        select id as id, name as title, 1 as depth
+        select id as id, name as title, 1 as depth,
+          json_build_object(
+            'id', id,
+            'application', name
+          ) AS properties
         from solace_application
         where application_domain_id = $1
       EOQ
@@ -69,7 +77,12 @@ dashboard "application_domain" {
       category = category.application_version
 
       sql = <<-EOQ
-        select a.id as id, a.version as title, 4 as depth
+        select a.id as id, a.version as title, 4 as depth,
+          json_build_object(
+            'id', a.id,
+            'application', b.name,
+            'version', a.version
+          ) AS properties
           from solace_application_version a
           JOIN solace_application b on a.application_id = b.id
           where b.id = $1
@@ -94,7 +107,11 @@ dashboard "application_domain" {
       category = category.event
 
       sql = <<-EOQ
-        select a.id as id, a.name as title, 3 as depth
+        select a.id as id, a.name as title, 3 as depth,
+          json_build_object(
+            'id', a.id,
+            'event', a.name
+          ) AS properties
           from solace_event a
           where a.application_domain_id = $1
       EOQ
@@ -105,7 +122,12 @@ dashboard "application_domain" {
       category = category.event_version
 
       sql = <<-EOQ
-        SELECT a.id AS id, a.version AS title, 6 AS depth
+        SELECT a.id AS id, a.version AS title, 6 AS depth,
+          json_build_object(
+            'id', a.id,
+            'event', b.name,
+            'version', a.version
+          ) AS properties
           FROM solace_event_version a
           JOIN solace_event b ON a.event_id = b.id
           WHERE b.application_domain_id = $1
@@ -151,7 +173,11 @@ dashboard "application_domain" {
       category = category.enum
 
       sql = <<-EOQ
-      select a.id as id, a.name as title, 4 as depth
+      select a.id as id, a.name as title, 4 as depth,
+          json_build_object(
+            'id', a.id,
+            'enum', a.name
+          ) AS properties
         from solace_enum a
         where a.application_domain_id = $1
       EOQ
@@ -162,7 +188,12 @@ dashboard "application_domain" {
       category = category.enum_version
 
       sql = <<-EOQ
-        select a.id as id, a.version as title, 5 as depth
+        select a.id as id, a.version as title, 5 as depth,
+          json_build_object(
+            'id', a.id,
+            'enum', b.name,
+            'version', a.version
+          ) AS properties
           from solace_enum_version a, solace_enum b
           where b.application_domain_id = $1 and a.enum_id = b.id
       EOQ
@@ -207,7 +238,11 @@ dashboard "application_domain" {
       category = category.schema
 
       sql = <<-EOQ
-      select a.id as id, a.name as title, 4 as depth
+      select a.id as id, a.name as title, 4 as depth,
+          json_build_object(
+            'id', a.id,
+            'schema', a.name
+          ) AS properties
         from solace_schema a
         where a.application_domain_id = $1
       EOQ
@@ -218,7 +253,12 @@ dashboard "application_domain" {
       category = category.schema_version
 
       sql = <<-EOQ
-        select a.id as id, a.version as title, 5 as depth
+        select a.id as id, a.version as title, 5 as depth,
+          json_build_object(
+            'id', a.id,
+            'schema', b.name,
+            'version', a.version
+          ) AS properties
           from solace_schema_version a, solace_schema b
           where b.application_domain_id = $1 and a.schema_id = b.id
       EOQ
@@ -263,7 +303,11 @@ dashboard "application_domain" {
       category = category.eventapi
 
       sql = <<-EOQ
-        select a.id AS id, a.name as title, 7 as depth
+        select a.id AS id, a.name as title, 7 as depth,
+          json_build_object(
+            'id', a.id,
+            'eventapi', a.name
+          ) AS properties
           from solace_eventapi a
           where a.application_domain_id = $1
       EOQ
